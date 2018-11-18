@@ -21,10 +21,8 @@ typedef struct Token {
 	TokenKind kind;
 	const char *start;
 	const char *end;
-	union {
-		uint64_t val;
-		const char *name;
-	};
+	uint64_t val;
+	const char *name;
 } Token;
 
 typedef struct InternStr {
@@ -217,7 +215,7 @@ void next_token(){
 }
 
 void print_token(Token token){
-    printf("%d TOKEN: ", token.kind);
+    printf("TOKEN: ");
     if (token.kind < 128) {
         printf("'%c'\n", token.kind);
     } else {
@@ -226,13 +224,13 @@ void print_token(Token token){
             printf("TOKEN INT: %lu\n", token.val);
             break;
         case TOKEN_NAME:
-            printf("TOKEN NAME: %.*s\n", (int)(token.end - token.start), token.start);
+            printf("TOKEN NAME: %s\n", token.name);
             break;
 		case TOKEN_BINEXP:
-            printf("TOKEN BINEXP: %.*s\n", (int)(token.end - token.start), token.start);
+            printf("TOKEN BINEXP: %s\n", token.name);
             break;
         case TOKEN_UNEXP:
-            printf("TOKEN UNEXP: %.*s\n", (int)(token.end - token.start), token.start);
+            printf("TOKEN UNEXP: %s\n", token.name);
             break;
 		case TOKEN_EOF:
 			printf("END OF FILE\n");
@@ -252,7 +250,7 @@ void parse_test(){
 		next_token();
 	}
 }
-
+Token *tstream;
 int main(int argc,char *argv[]){
 	if(argc < 2)
 		fatal("Usage: cepter <file.ct>");
@@ -268,5 +266,7 @@ int main(int argc,char *argv[]){
 	*(stream+fsize) = 0;
 	printf("%d\n", *(stream+fsize));
 	parse_test();
+    buf_push(tstream, ((Token){TOKEN_INT, 0, 0, 45}));
+    print_token(tstream[0]);
 
 }
