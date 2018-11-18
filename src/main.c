@@ -12,8 +12,8 @@ void fatal(const char *fmt, ...){
 typedef enum TokenKind {
 	TOKEN_INT = 128,		// ascii if tokenkind < 128
 	TOKEN_NAME,
-	TOKEN_UNARY,
 	TOKEN_BINEXP,
+    TOKEN_UNEXP,
 	TOKEN_EOF,
 } TokenKind;
 
@@ -134,7 +134,7 @@ void next_token(){
         case 'Y':
         case 'Z': 
         case '_': {
-            const char *start = stream++;
+            stream++;
             while(isalnum(*stream) || *stream == '_'){
                 stream++;
             }
@@ -145,16 +145,70 @@ void next_token(){
 		case '+':
 		case '-': { 
 				if(*(stream+1) == '='){
-					const char *start = stream++;
+					stream++;
 					token.kind = TOKEN_BINEXP;
 					token.name = str_intern_range(token.start, ++stream);
-				} else {
+                    break;
+				} else if(*stream == '-' && *(stream+1) == '-'){
+                    stream++;
+                    token.kind = TOKEN_UNEXP;
+                    token.name = str_intern_range(token.start, ++stream);
+                    break;
+                } else if(*stream == '+' && *(stream+1) == '+'){
+                    stream++;
+                    token.kind = TOKEN_UNEXP;
+                    token.name = str_intern_range(token.start, ++stream);
+                    break;
+                } else {
 					token.kind = *stream++;
 					break;
 				}
-			break;
+			
 		}
-
+        case '=': {
+            if(*(stream+1) == '='){
+                stream++;
+                token.kind = TOKEN_BINEXP;
+                token.name = str_intern_range(token.start, ++stream);
+                break;
+            } else {
+                token.kind = *stream++;
+                break;
+            }
+        }
+        case '|': {
+            if(*(stream+1) == '|'){
+                stream++;
+                token.kind = TOKEN_BINEXP;
+                token.name = str_intern_range(token.start, ++stream);
+                break;
+            } else {
+                token.kind = *stream++;
+                break;
+            }
+        }
+        case '&': {
+            if(*(stream+1) == '&'){
+                stream++;
+                token.kind = TOKEN_BINEXP;
+                token.name = str_intern_range(token.start, ++stream);
+                break;
+            } else {
+                token.kind = *stream++;
+                break;
+            }
+        }
+        case '!': {
+            if(*(stream+1) == '='){
+                stream++;
+                token.kind = TOKEN_BINEXP;
+                token.name = str_intern_range(token.start, ++stream);
+                break;
+            } else {
+                token.kind = *stream++;
+                break;
+            }
+        }
         default:
             token.kind = *stream++;
             break;
@@ -176,6 +230,9 @@ void print_token(Token token){
             break;
 		case TOKEN_BINEXP:
             printf("TOKEN BINEXP: %.*s\n", (int)(token.end - token.start), token.start);
+            break;
+        case TOKEN_UNEXP:
+            printf("TOKEN UNEXP: %.*s\n", (int)(token.end - token.start), token.start);
             break;
 		case TOKEN_EOF:
 			printf("END OF FILE\n");
