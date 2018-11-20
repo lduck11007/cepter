@@ -1,0 +1,33 @@
+non-terminal symbols outlined with ``, tokens uppercase, literals with ""
+
+`library` = EOF | `function` `library`
+
+`function` = "fn" IDENTIFIER "(" `parameter` ")" ":" "=" `statement`
+
+`parameter` = NONE | IDENTIFIER ":" TYPE "," `parameter`
+
+`statement` = "{" `statement "}"
+            | "if" "(" `expression` ")" `statement`
+            | "while" "{" `expression` "}" `statement`
+            | "return" `expression` ";"
+            | "let" IDENTIFIER ":" TYPE "=" `expression` ";"
+            | `expression` ";"
+            | ";"
+
+`expression` = INT_LITERAL
+             | STR_LITERAL
+             | IDENTIFIER
+             | "(" `expression` ")"
+             | `expression` "[" `expression` "]"
+             | `expression` "=" `expression`
+             | `expression` "+" `expression`
+             | `expression` "..." `expression` //etc, "-", "+=", "-=", "||", "&&", "==", "!=", ","
+             | "&" `expression"
+             | "*" `expression`
+             | "-" `expression`
+             | "!" `expression`
+             | "++" `expression`
+             | "--" `expression`
+             | `expression` "++" 
+             | `expression` "--"
+             | `expression` "?" `expression` ":" `expression`

@@ -53,6 +53,10 @@ const char *str_intern(const char *str) {		//only works with null-byte terminate
 	return str_intern_range(str, str + strlen(str));
 }
 
+int match_token(TokenKind kind){
+    return token.kind == kind;
+}
+
 void next_token(){
 	if(*stream == 0){
 		token.kind = TOKEN_EOF;
@@ -250,6 +254,11 @@ void parse_test(){
 		next_token();
 	}
 }
+
+void parse_library(){
+
+}
+
 Token *tstream;
 int main(int argc,char *argv[]){
 	if(argc < 2)
@@ -263,10 +272,9 @@ int main(int argc,char *argv[]){
 	stream = malloc(fsize + 1);		
 	fread(stream, fsize, 1, f);
 	fclose(f);
-	*(stream+fsize) = 0;
-	printf("%d\n", *(stream+fsize));
-	parse_test();
-    buf_push(tstream, ((Token){TOKEN_INT, 0, 0, 45}));
-    print_token(tstream[0]);
+	*(stream+fsize) = 0; //add EOF token
+    next_token();
+    parse_library();
+    print_token(token);
 
 }
