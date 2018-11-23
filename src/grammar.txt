@@ -18,8 +18,8 @@ non-terminal symbols outlined with ``, tokens uppercase, literals with ""
              | STR_LITERAL
              | IDENTIFIER
              | "(" `expression` ")"
-             | `expression` "[" `expression` "]"
-             | `expression` "=" `expression`
+             | IDENTIFIER "[" `expression` "]"
+             | IDENTIFIER` "=" `expression`
              | `expression` "+" `expression`
              | `expression` "..." `expression` //etc, "-", "+=", "-=", "||", "&&", "==", "!=", ","
              | "&" `expression"
